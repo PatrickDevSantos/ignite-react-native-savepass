@@ -6,7 +6,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import uuid from 'react-native-uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Header } from '../../components/Header';
 import { Input } from '../../components/Form/Input';
@@ -53,7 +53,7 @@ export function RegisterLoginData() {
 
   async function handleRegister(formData: FormData) {
     const newLoginData = {
-      id: String(uuid.v4()),
+      id: String(uuidv4()),
       ...formData
     }
 

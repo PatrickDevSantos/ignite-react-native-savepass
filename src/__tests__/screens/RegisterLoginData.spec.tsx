@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const mockedNavigate = jest.fn();
 
-jest.mock('react-native-uuid', () => {
+jest.mock('uuid', () => {
   return {
     v4: () => {
       return 'new-item'

@@ -41,7 +41,9 @@ export function Home() {
     if (searchText) {
       const filteredList = data.filter(item => item.service_name.includes(searchText))
       setSearchListData(filteredList)
+      return
     }
+    setSearchListData(data)
   }
 
   function handleChangeInputText(text: string) {
