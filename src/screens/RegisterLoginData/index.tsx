@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { useForm } from 'react-hook-form';
+import { useForm, Control, FieldValues } from 'react-hook-form';
 import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -45,9 +45,11 @@ export function RegisterLoginData() {
     formState: {
       errors
     }
-  } = useForm({
+  } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
+
+  const formControll = control as unknown as Control<FieldValues, any>
 
   async function handleRegister(formData: FormData) {
     const newLoginData = {
@@ -57,7 +59,16 @@ export function RegisterLoginData() {
 
     const dataKey = '@savepass:logins';
 
-    // Save data on AsyncStorage and navigate to 'Home' screen
+    const data = await AsyncStorage.getItem(dataKey)
+    const currentData = data ? JSON.parse(data) : []
+
+    const dataFormatted = [
+      ...currentData,
+      newLoginData
+    ]
+
+    await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted))
+    navigate('Home')
   }
 
   return (
@@ -73,11 +84,8 @@ export function RegisterLoginData() {
             testID="service-name-input"
             title="Nome do serviço"
             name="service_name"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
-            control={control}
+            error={errors.service_name && errors.service_name.message}
+            control={formControll}
             autoCapitalize="sentences"
             autoCorrect
           />
@@ -85,11 +93,8 @@ export function RegisterLoginData() {
             testID="email-input"
             title="E-mail ou usuário"
             name="email"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
-            control={control}
+            error={errors.email && errors.email.message!}
+            control={formControll}
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="email-address"
@@ -98,11 +103,8 @@ export function RegisterLoginData() {
             testID="password-input"
             title="Senha"
             name="password"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
-            control={control}
+            error={errors.password && errors.password.message!}
+            control={formControll}
             secureTextEntry
           />
 
